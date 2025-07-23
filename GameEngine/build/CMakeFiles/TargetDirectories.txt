@@ -1,3 +1,0 @@
-C:/Users/Tim/C++Projects/GameEngine/build/CMakeFiles/GameEngine.dir
-C:/Users/Tim/C++Projects/GameEngine/build/CMakeFiles/edit_cache.dir
-C:/Users/Tim/C++Projects/GameEngine/build/CMakeFiles/rebuild_cache.dir
