@@ -1,15 +1,23 @@
 #include <iostream>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 #define STB_IMAGE_IMPLEMENTATION // Preprocessor will modify the header file so it only contains relevant source code, effectively turning it into a .cpp.
 #include "../headers/stb_image.h"
 #include "../headers/game.h"
+#include "../headers/resource_manager.h"
+#include "../headers/texture.h"
+#include "../headers/sprite_renderer.h"
 
 using namespace std;
+using namespace glm;
 
 void processInput(GLFWwindow *window);
+
+mat4 projection = ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f);
 
 int main() 
 {
