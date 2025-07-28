@@ -72,17 +72,17 @@ void Game::ProcessInput(float dt)
         float velo = PLAYER_VELOCITY * dt;
 
         if (this->Keys[GLFW_KEY_A]) {
-            if (Player->GetPosition().x >= 0.0f) {
-                Player->SetPosition(glm::vec2(Player->GetPosition().x - velo, Player->GetPosition().y));
+            if (Player->position.x >= 0.0f) {
+                Player->position.x -= velo;
                 if (Ball->stuck) 
-                    Ball->SetPosition(glm::vec2(Ball->GetPosition().x - velo, Ball->GetPosition().y));
+                    Ball->position.x -= velo;
             }
         }
         else if (this->Keys[GLFW_KEY_D]) {
-            if (Player->GetPosition().x <= this->Width - Player->GetSize().x) {
-                Player->SetPosition(glm::vec2(Player->GetPosition().x + velo, Player->GetPosition().y));
+            if (Player->position.x <= this->Width - Player->size.x) {
+                Player->position.x += velo;
                 if (Ball->stuck) 
-                    Ball->SetPosition(glm::vec2(Ball->GetPosition().x + velo, Ball->GetPosition().y));
+                    Ball->position.x += velo;
             }
             
         }

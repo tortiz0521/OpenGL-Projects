@@ -11,23 +11,22 @@ glm::vec2 BallObject::Move(float dt, unsigned int window_width)
 {
     if (!this->stuck) {
         // Set the current velocity based on delta time.
-        glm::vec2 tempP(this->GetPosition() + (this->GetVelocity() * dt));
-        this->SetPosition(tempP);
+        this->position += this->velo * dt;
 
         // Check positions for wall colisions
-        if (this->GetPosition().x >= window_width - this->GetSize().x ||
-            this->GetPosition().x <= 0.0f)
-            this->SetVelocity(glm::vec2(-this->GetVelocity().x, this->GetVelocity().y));
-        else if (this->GetPosition().y <= 0.0f)
-            this->SetVelocity(glm::vec2(this->GetVelocity().x, -this->GetVelocity().y));
+        if (this->position.x >= window_width - this->size.x ||
+            this->position.x <= 0.0f)
+            this->velo.x = -this->velo.x;
+        else if (this->position.y <= 0.0f)
+            this->velo.y = -this->velo.y;
     }
 
-    return this->GetPosition();
+    return this->position;
 }
 
 void BallObject::Reset(glm::vec2 position, glm::vec2 velocity)
 {
-    this->SetPosition(position);
-    this->SetVelocity(velocity);
+    this->position = position;
+    this->velo = velocity;
     this->stuck = true;
 }

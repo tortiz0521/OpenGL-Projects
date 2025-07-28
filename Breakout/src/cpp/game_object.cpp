@@ -1,74 +1,29 @@
 #include "../headers/game_object.h"
 
 GameObject::GameObject()
-    : position_(0.0f, 0.0f), size_(1.0f, 1.0f), velo_(0.0f),
-     color_(1.0f), rotation_(0.0f), sprite_() {}
+    : position(0.0f, 0.0f), size(1.0f, 1.0f), velo(0.0f),
+     color(1.0f), rotation(0.0f), sprite() {}
 
 GameObject::GameObject(glm::vec2 pos, glm::vec2 size, Texture2D tex, glm::vec2 velo, glm::vec3 color, float rotation, bool solid) 
-    : position_(pos), size_(size), sprite_(tex), rotation_(rotation), velo_(velo),
-    color_(color), isSolid_(solid){}
+    : position(pos), size(size), sprite(tex), rotation(rotation), velo(velo),
+    color(color), isSolid(solid){}
 
 void GameObject::Draw(SpriteRenderer &renderer)
 {
-    renderer.Draw(this->sprite_, this->position_, this->rotation_, this->size_, this->color_);
-}
-
-void GameObject::SetPosition(const glm::vec2 p)
-{
-    this->position_ = p;
-}
-
-void GameObject::SetSize(glm::vec2 s)
-{
-    this->size_ = s;
-}
-
-void GameObject::SetVelocity(glm::vec2 v)
-{
-    this->velo_ = v;
-}
-
-glm::vec2 GameObject::GetPosition() const
-{
-    return this->position_;
-}
-
-glm::vec2 GameObject::GetSize() const
-{
-    return this->size_;
-}
-
-glm::vec2 GameObject::GetVelocity() const
-{
-    return this->velo_;
-}
-
-glm::vec3 GameObject::GetColor() const
-{
-    return this->color_;
-}
-
-Texture2D GameObject::GetSpriteTex() const
-{
-    return this->sprite_;
-}
-
-float GameObject::GetRotation() const
-{
-    return this->rotation_;
+    renderer.Draw(this->sprite, this->position, this->rotation, this->size, this->color);
 }
 
 bool GameObject::IsAlive() const
 {
-    return alive_;
+    return alive;
 }
 
 bool GameObject::IsSolid() const
 {
-    return isSolid_;
+    return isSolid;
 }
 
 void GameObject::Destroy()
 {
-    this->alive_ = false;
+    this->alive = false;
 }

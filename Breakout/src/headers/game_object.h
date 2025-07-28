@@ -8,23 +8,17 @@
 class GameObject
 {
 public:
+    glm::vec2 position, size, velo;
+    glm::vec3 color;
+    Texture2D sprite;
+    bool alive = true, isSolid = false;
+    float rotation;
+
     GameObject();
     GameObject(glm::vec2 pos, glm::vec2 size, Texture2D tex,
         glm::vec2 velo = glm::vec2(0.0f), glm::vec3 color = glm::vec3(1.0f),
         float rotation = 0.0f, bool solid = false);
 
-    // Setters
-    void SetPosition(const glm::vec2 p);
-    void SetSize(glm::vec2 s);
-    void SetVelocity(glm::vec2 v);
-
-    // Getters
-    glm::vec2 GetPosition() const;
-    glm::vec2 GetSize() const;
-    glm::vec2 GetVelocity() const;
-    glm::vec3 GetColor() const;
-    Texture2D GetSpriteTex() const;
-    float GetRotation() const;
 
     // Check if the object is alive.
     bool IsAlive() const;
@@ -33,13 +27,6 @@ public:
     void Destroy(); // Set alive to false.
 
     void Draw(SpriteRenderer &renderer);
-
-private:
-    glm::vec2 position_, size_, velo_;
-    glm::vec3 color_;
-    Texture2D sprite_;
-    bool alive_ = true, isSolid_ = false;
-    float rotation_;
 };
 
 #endif
