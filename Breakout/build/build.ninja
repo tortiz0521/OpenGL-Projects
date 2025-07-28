@@ -50,6 +50,54 @@ build CMakeFiles/Breakout.dir/src/cpp/main.cpp.obj: CXX_COMPILER__Breakout_unsca
   OBJECT_DIR = CMakeFiles\Breakout.dir
   OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
 
+build CMakeFiles/Breakout.dir/src/cpp/game.cpp.obj: CXX_COMPILER__Breakout_unscanned_ C$:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/src/cpp/game.cpp || cmake_object_order_depends_target_Breakout
+  DEP_FILE = CMakeFiles\Breakout.dir\src\cpp\game.cpp.obj.d
+  INCLUDES = -isystem C:/Users/Tim/vcpkg/installed/x64-mingw-static/include
+  OBJECT_DIR = CMakeFiles\Breakout.dir
+  OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
+
+build CMakeFiles/Breakout.dir/src/cpp/resource_manager.cpp.obj: CXX_COMPILER__Breakout_unscanned_ C$:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/src/cpp/resource_manager.cpp || cmake_object_order_depends_target_Breakout
+  DEP_FILE = CMakeFiles\Breakout.dir\src\cpp\resource_manager.cpp.obj.d
+  INCLUDES = -isystem C:/Users/Tim/vcpkg/installed/x64-mingw-static/include
+  OBJECT_DIR = CMakeFiles\Breakout.dir
+  OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
+
+build CMakeFiles/Breakout.dir/src/cpp/shader.cpp.obj: CXX_COMPILER__Breakout_unscanned_ C$:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/src/cpp/shader.cpp || cmake_object_order_depends_target_Breakout
+  DEP_FILE = CMakeFiles\Breakout.dir\src\cpp\shader.cpp.obj.d
+  INCLUDES = -isystem C:/Users/Tim/vcpkg/installed/x64-mingw-static/include
+  OBJECT_DIR = CMakeFiles\Breakout.dir
+  OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
+
+build CMakeFiles/Breakout.dir/src/cpp/sprite_renderer.cpp.obj: CXX_COMPILER__Breakout_unscanned_ C$:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/src/cpp/sprite_renderer.cpp || cmake_object_order_depends_target_Breakout
+  DEP_FILE = CMakeFiles\Breakout.dir\src\cpp\sprite_renderer.cpp.obj.d
+  INCLUDES = -isystem C:/Users/Tim/vcpkg/installed/x64-mingw-static/include
+  OBJECT_DIR = CMakeFiles\Breakout.dir
+  OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
+
+build CMakeFiles/Breakout.dir/src/cpp/texture.cpp.obj: CXX_COMPILER__Breakout_unscanned_ C$:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/src/cpp/texture.cpp || cmake_object_order_depends_target_Breakout
+  DEP_FILE = CMakeFiles\Breakout.dir\src\cpp\texture.cpp.obj.d
+  INCLUDES = -isystem C:/Users/Tim/vcpkg/installed/x64-mingw-static/include
+  OBJECT_DIR = CMakeFiles\Breakout.dir
+  OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
+
+build CMakeFiles/Breakout.dir/src/cpp/game_object.cpp.obj: CXX_COMPILER__Breakout_unscanned_ C$:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/src/cpp/game_object.cpp || cmake_object_order_depends_target_Breakout
+  DEP_FILE = CMakeFiles\Breakout.dir\src\cpp\game_object.cpp.obj.d
+  INCLUDES = -isystem C:/Users/Tim/vcpkg/installed/x64-mingw-static/include
+  OBJECT_DIR = CMakeFiles\Breakout.dir
+  OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
+
+build CMakeFiles/Breakout.dir/src/cpp/game_level.cpp.obj: CXX_COMPILER__Breakout_unscanned_ C$:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/src/cpp/game_level.cpp || cmake_object_order_depends_target_Breakout
+  DEP_FILE = CMakeFiles\Breakout.dir\src\cpp\game_level.cpp.obj.d
+  INCLUDES = -isystem C:/Users/Tim/vcpkg/installed/x64-mingw-static/include
+  OBJECT_DIR = CMakeFiles\Breakout.dir
+  OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
+
+build CMakeFiles/Breakout.dir/src/cpp/ball.cpp.obj: CXX_COMPILER__Breakout_unscanned_ C$:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/src/cpp/ball.cpp || cmake_object_order_depends_target_Breakout
+  DEP_FILE = CMakeFiles\Breakout.dir\src\cpp\ball.cpp.obj.d
+  INCLUDES = -isystem C:/Users/Tim/vcpkg/installed/x64-mingw-static/include
+  OBJECT_DIR = CMakeFiles\Breakout.dir
+  OBJECT_FILE_DIR = CMakeFiles\Breakout.dir\src\cpp
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Breakout
@@ -58,7 +106,7 @@ build CMakeFiles/Breakout.dir/src/cpp/main.cpp.obj: CXX_COMPILER__Breakout_unsca
 #############################################
 # Link the executable Breakout.exe
 
-build Breakout.exe: CXX_EXECUTABLE_LINKER__Breakout_ CMakeFiles/Breakout.dir/src/cpp/main.cpp.obj | C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglm.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglad.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglfw3.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libassimpd.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpolyclipping.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpoly2tri.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libminizip.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/lib/libzlib.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpugixml.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libkubazip.a
+build Breakout.exe: CXX_EXECUTABLE_LINKER__Breakout_ CMakeFiles/Breakout.dir/src/cpp/main.cpp.obj CMakeFiles/Breakout.dir/src/cpp/game.cpp.obj CMakeFiles/Breakout.dir/src/cpp/resource_manager.cpp.obj CMakeFiles/Breakout.dir/src/cpp/shader.cpp.obj CMakeFiles/Breakout.dir/src/cpp/sprite_renderer.cpp.obj CMakeFiles/Breakout.dir/src/cpp/texture.cpp.obj CMakeFiles/Breakout.dir/src/cpp/game_object.cpp.obj CMakeFiles/Breakout.dir/src/cpp/game_level.cpp.obj CMakeFiles/Breakout.dir/src/cpp/ball.cpp.obj | C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglm.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglad.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglfw3.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libassimpd.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpolyclipping.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpoly2tri.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libminizip.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/lib/libzlib.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpugixml.a C$:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libkubazip.a
   LINK_LIBRARIES = -lopengl32  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglm.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglad.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libglfw3.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libassimpd.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpolyclipping.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpoly2tri.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libminizip.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/lib/libzlib.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libpugixml.a  C:/Users/Tim/vcpkg/installed/x64-mingw-static/debug/lib/libkubazip.a  -static-libgcc  -static-libstdc++  -Wl,-Bstatic  -lstdc++  -lwinpthread  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Breakout.dir
   POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\Tim\C++Projects\OpenGL-Projects\Breakout\build && C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/Users/Tim/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/build/Breakout.exe -installedDir C:/Users/Tim/vcpkg/installed/x64-mingw-static/bin -OutVariable out"

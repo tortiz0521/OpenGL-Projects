@@ -18,7 +18,7 @@ Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderF
     return Shaders[name];
 }
 
-Shader ResourceManager::loadShaderFromFile(const char *vShader, const char *fShader, const char *gShader = nullptr)
+Shader ResourceManager::loadShaderFromFile(const char *vShader, const char *fShader, const char *gShader)
 {
     string vertex, fragment, geo; // Output from shader files.
     ifstream vfile, ffile, gfile; // File streams for shader files.
@@ -87,7 +87,13 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file)
             texture.Internal_Format = GL_RED;
             texture.Image_Format = GL_RED;
         }
+        else if(nrChannels == 3) {
+            texture.Internal_Format = GL_RGB;
+            texture.Image_Format = GL_RGB;
+        }
         else if(nrChannels == 4) {
+            if (strcmp(file, "textures/paddle.png") == 0)
+                cout << "HERE" << endl;
             texture.Internal_Format = GL_RGBA;
             texture.Image_Format = GL_RGBA;
         }

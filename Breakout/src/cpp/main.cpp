@@ -15,42 +15,103 @@
 using namespace std;
 using namespace glm;
 
-void processInput(GLFWwindow *window);
+bool setupWindow(const unsigned int w, const unsigned int h, GLFWwindow* &window);
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
-mat4 projection = ortho(0.0f, 800.0f, 600.0f, 0.0f, -1.0f, 1.0f);
+const unsigned int WIDTH = 800;
+const unsigned int HEIGHT = 600;
+
+Game game = Game(WIDTH, HEIGHT);
 
 int main() 
+{
+    GLFWwindow *window;
+    if(!setupWindow(WIDTH, HEIGHT, window))
+        return -1;
+
+    // Setup the viewport!
+    glViewport(0, 0, WIDTH, HEIGHT);
+
+    game.init();
+
+    // Blend function so that our paddle/ball are not just rectangles.
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Establish callbacks
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
+    
+    while(!glfwWindowShouldClose(window))
+    {
+        // Calculate deltatime!
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        glfwPollEvents();
+
+        // Process user input
+        game.ProcessInput(deltaTime);
+
+        // Update game state
+        game.Update(deltaTime);
+
+        // Render the frame!
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        game.Render();
+
+        glfwSwapBuffers(window);
+        //glfwPollEvents();
+    }
+}
+
+bool setupWindow(const unsigned int w, const unsigned int h, GLFWwindow* &window)
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-    GLFWwindow *window = glfwCreateWindow(800, 600, "Breakout", NULL, NULL);
+    window = glfwCreateWindow(800, 600, "Breakout", NULL, NULL);
     if(window == NULL)
     {
         cout << "Failed to create GLFW window!" << endl;
         glfwTerminate();
-        return -1;
+        return false;
     }
     glfwMakeContextCurrent(window); // Makes the context of our window the main context on the current thread!
 
     if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) // Set up GLAD. Uses your OS specific OpenGL functions!
     {
         cout << "Failed to initialize GLAD!" << endl;
-        return -1;
+        return false;
     }
 
-    while(!glfwWindowShouldClose(window))
-    {
-        processInput(window);
+    return true;
+}
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
+{
+    // When the user presses the escape key, set the WindowShouldClose function to true.
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, true);
+    
+    // Get key inputs and determine if they are presses or releases.
+    if (key >= 0 && key < 1024) {
+        if (action == GLFW_PRESS)
+            game.Keys[key] = true;
+        else if (action == GLFW_RELEASE)
+            game.Keys[key] = false;  
     }
 }
 
-void processInput(GLFWwindow *window)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+    // make sure the viewport matches the new window dimensions; note that width and 
+    // height will be significantly larger than specified on retina displays.
+    glViewport(0, 0, width, height);
 }
