@@ -57,7 +57,7 @@ void CollisionAdjust(BallObject &ball, const glm::vec2 &clamp, const glm::vec2 &
     glm::vec2 r(0.f), R(0.0f);
     if (glm::length(D) != 0.0f) {
         r = glm::normalize(D) * ball.radius;
-        R = D - r;
+        R = r - D;
     }
 
     // Move the ball to fit.
@@ -204,7 +204,20 @@ void Game::Render()
 
 void Game::Collisions()
 {
-    if (!Ball->stuck && CheckCircleCollision(*Player, *Ball)) {return;}
+    if (!Ball->stuck && CheckCircleCollision(*Player, *Ball)) {
+        // Check where the ball hit the board
+        float center = Player->position.x + (Player->size.x / 2.0f);
+        float d = (Ball->position.x + Ball->radius) - center;
+        float percent = d / (Player->size.x / 2.0f);
+
+        // Change the ball's velocity accordingly.
+        float strength = 2.0f;
+        glm::vec2 oldVelo = Ball->velo;
+        Ball->velo.x = INITIAL_BALL_VELOCITY.x * percent * strength;
+        Ball->velo.y = -1.0f * glm::abs(Ball->velo.y);
+        Ball->velo = glm::normalize(Ball->velo) * glm::length(oldVelo);
+        return;
+    }
 
     for (GameObject &b : this->levels[level].Bricks) {
         if (b.IsAlive() && CheckCircleCollision(b, *Ball)) {
