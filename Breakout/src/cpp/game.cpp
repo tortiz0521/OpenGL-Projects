@@ -2,17 +2,104 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 // Player Attributes
 const glm::vec2 PLAYER_SIZE(100.0f, 20.0f);
 const float PLAYER_VELOCITY(500.0f);
 //Ball Attributes
 const float BALL_RADIUS = 12.5f;
-const glm::vec2 INITIAL_BALL_VELOCITY(100.0f, -350.0f);
+const glm::vec2 INITIAL_BALL_VELOCITY(75.0f, -150.0f);
 
 SpriteRenderer *Renderer;
 GameObject *Player;
 BallObject *Ball;
+
+/*
+    This function acts as a way to check for AABB - AABB collision between two game objects.
+    It checks if the ball objects furthest axes are greater than the bricks position axis and
+    vice-versa. If both are true, then we know that there is some collision across the axis.
+*/
+bool CheckBoxCollision(GameObject &brick, GameObject &ball)
+{
+    bool xCollision = ball.position.x + ball.size.x >= brick.position.x &&
+        ball.position.x <= brick.position.x + brick.size.x;
+    
+    bool yCollision = ball.position.y + ball.size.y >= brick.position.y &&
+        ball.position.y <= brick.position.y + brick.size.y;
+    
+    return xCollision && yCollision;
+}
+
+void CollisionAdjust(BallObject &ball, const glm::vec2 &clamp, const glm::vec2 &D)
+{
+    glm::vec2 compass[] = {
+        glm::vec2(0.0f, 1.0f),	// up
+        glm::vec2(1.0f, 0.0f),	// right
+        glm::vec2(0.0f, -1.0f),	// down
+        glm::vec2(-1.0f, 0.0f)	// left
+    };
+    float max = 0.0f;
+    unsigned int best_match = -1;
+    for (unsigned int i = 0; i < 4; i++)
+    {
+        float dot_product = glm::dot(glm::normalize(D), compass[i]);
+        if (dot_product > max)
+        {
+            max = dot_product;
+            best_match = i;
+        }
+    }
+
+    if (glm::dot(glm::normalize(ball.velo), compass[best_match]) <= 0.0f)
+        return;
+
+    glm::vec2 r(0.f), R(0.0f);
+    if (glm::length(D) != 0.0f) {
+        r = glm::normalize(D) * ball.radius;
+        R = D - r;
+    }
+
+    // Move the ball to fit.
+    ball.position -= R;
+    
+    // Adjust the velocity of the ball.
+    if (best_match == 0 || best_match == 2)
+        ball.velo.y = -ball.velo.y;
+    else {
+        ball.velo.x = -ball.velo.x;
+    }
+}
+
+/*
+    This function is a bit different from the AABB-AABB collision above. Here we calculate the distance
+    from our circle's center to the AABB's center, then we clamp that value to some point on the AABB.
+    Lastly, determine if the distance from the circle's center to the clamped point, P, is less than the
+    radius of the circle.
+*/
+bool CheckCircleCollision(GameObject &brick, BallObject &ball)
+{
+    // Find our half extents.
+    glm::vec2 AABB_center = glm::vec2((brick.position.x + (brick.size.x / 2.0f)), (brick.position.y + (brick.size.y / 2.0f)));
+    // std::cout << AABB_center.x << ", " << AABB_center.y << '\n';
+    glm::vec2 circle_center = glm::vec2((ball.position.x + (ball.size.x / 2.0f)), (ball.position.y + (ball.size.y / 2.0f)));
+
+    // Calculate the difference vector from the AABB object to our circle.
+    glm::vec2 D = glm::vec2(circle_center.x - AABB_center.x, circle_center.y - AABB_center.y);
+    
+    // Find point P on the AABB: clamp the difference vector to be within the AABB, then add AABB_center to get the actual vector to P.
+    glm::vec2 clamp = glm::clamp(D, -brick.size / 2.0f, brick.size / 2.0f);
+    glm::vec2 P = AABB_center + clamp;
+
+    // Update D to D_prime by subtracting P by the ball's center.
+    D = P - circle_center;
+
+    // return whether or not the ball's radius is >= the length to P from the center.
+    bool collides = glm::length(D) <= ball.radius;
+    if (collides)  
+        CollisionAdjust(ball, clamp, D);
+    return collides;
+}
 
 Game::Game(unsigned int w, unsigned int h) : Width(w), Height(h) {
     State = GAME_ACTIVE;
@@ -94,6 +181,7 @@ void Game::ProcessInput(float dt)
 void Game::Update(float dt)
 {
     Ball->Move(dt, this->Width);
+    this->Collisions();
 }
 
 void Game::Render()
@@ -106,10 +194,22 @@ void Game::Render()
         // Draw the player!
         Player->Draw(*Renderer);
 
-        // Draw the Ball!
-        Ball->Draw(*Renderer);
-
         // Draw the rest of the sprites!
         this->levels[this->level].Draw(*Renderer);
+
+        // Draw the Ball!
+        Ball->Draw(*Renderer);
+    }
+}
+
+void Game::Collisions()
+{
+    if (!Ball->stuck && CheckCircleCollision(*Player, *Ball)) {return;}
+
+    for (GameObject &b : this->levels[level].Bricks) {
+        if (b.IsAlive() && CheckCircleCollision(b, *Ball)) {
+            if (!b.IsSolid())
+                b.Destroy();
+        }
     }
 }

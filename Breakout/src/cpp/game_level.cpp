@@ -75,7 +75,8 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, unsigned i
 void GameLevel::Draw(SpriteRenderer &renderer)
 {
     for (int i = 0; i < this->Bricks.size(); i++) {
-        this->Bricks[i].Draw(renderer);
+        if (this->Bricks[i].IsAlive())
+            this->Bricks[i].Draw(renderer);
     }
 }
 

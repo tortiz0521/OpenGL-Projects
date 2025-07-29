@@ -11,7 +11,6 @@ public:
     glm::vec2 position, size, velo;
     glm::vec3 color;
     Texture2D sprite;
-    bool alive = true, isSolid = false;
     float rotation;
 
     GameObject();
@@ -27,6 +26,9 @@ public:
     void Destroy(); // Set alive to false.
 
     void Draw(SpriteRenderer &renderer);
+
+private:
+    bool alive = true, isSolid = false;
 };
 
 #endif

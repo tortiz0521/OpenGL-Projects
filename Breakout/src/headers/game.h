@@ -46,6 +46,7 @@ class Game {
         void ProcessInput(float dt); // Function takes in delta time.
         void Update(float dt); // Function takes in delta time.
         void Render();
+        void Collisions();
 };
 
 #endif

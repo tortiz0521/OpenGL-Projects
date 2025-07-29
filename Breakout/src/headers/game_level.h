@@ -9,6 +9,9 @@
 class GameLevel
 {
 public:
+    // A vector containing the bricks of a level.
+    std::vector<GameObject> Bricks;
+
     GameLevel() {};
 
     // Load a level from a file!
@@ -21,8 +24,6 @@ public:
     bool IsComplete();
 
 private:
-    std::vector<GameObject> Bricks;
-
     // Initialize the level from our tile data.
     void init(std::vector<std::vector<unsigned int>> tileData, unsigned int lw, unsigned int lh);
 };
