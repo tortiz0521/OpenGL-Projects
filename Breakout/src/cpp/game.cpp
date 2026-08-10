@@ -113,18 +113,18 @@ Game::~Game()
 void Game::init()
 {
     // Load shaders and textures
-    ResourceManager::LoadShader("src/shaders/sprite.vs", "src/shaders/sprite.fs", nullptr, "sprite");
-    ResourceManager::LoadTexture("textures/awesomeface.png", "awesomeface");
-    ResourceManager::LoadTexture("textures/block_solid.png", "block_solid");
-    ResourceManager::LoadTexture("textures/block.png", "block");
-    ResourceManager::LoadTexture("textures/paddle.png", "paddle");
+    ResourceManager::LoadShader("../../src/shaders/sprite.vs", "../../src/shaders/sprite.fs", nullptr, "sprite");
+    ResourceManager::LoadTexture("../../textures/awesomeface.png", "awesomeface");
+    ResourceManager::LoadTexture("../../textures/block_solid.png", "block_solid");
+    ResourceManager::LoadTexture("../../textures/block.png", "block");
+    ResourceManager::LoadTexture("../../textures/paddle.png", "paddle");
 
     // Create levels and load them.
     GameLevel Standard, AFewSmallGaps, SpaceInvader, BounceGalore;
-    Standard.Load("levels/standard.lvl", this->Width , this->Height / 2);
-    AFewSmallGaps.Load("levels/a_few_small_gaps.lvl", this->Width , this->Height / 2);
-    SpaceInvader.Load("levels/space_invader.lvl", this->Width , this->Height / 2);
-    BounceGalore.Load("levels/bounce_galore.lvl", this->Width , this->Height / 2);
+    Standard.Load("../../levels/standard.lvl", this->Width , this->Height / 2);
+    AFewSmallGaps.Load("../../levels/a_few_small_gaps.lvl", this->Width , this->Height / 2);
+    SpaceInvader.Load("../../levels/space_invader.lvl", this->Width , this->Height / 2);
+    BounceGalore.Load("../../levels/bounce_galore.lvl", this->Width , this->Height / 2);
 
     // Place them into the levels member vector, set the current level.
     this->levels.push_back(Standard);
@@ -188,7 +188,7 @@ void Game::Render()
 {
     if (this->State == GAME_ACTIVE) {
         // Draw the background first!
-        Renderer->Draw(ResourceManager::LoadTexture("textures/background.jpg", "background"),
+        Renderer->Draw(ResourceManager::LoadTexture("../../textures/background.jpg", "background"),
             glm::vec2(0.0f, 0.0f), 0.0f, glm::vec2(this->Width, this->Height));
 
         // Draw the player!

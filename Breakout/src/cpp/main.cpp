@@ -6,7 +6,6 @@
 
 
 #define STB_IMAGE_IMPLEMENTATION // Preprocessor will modify the header file so it only contains relevant source code, effectively turning it into a .cpp.
-#include "../headers/stb_image.h"
 #include "../headers/game.h"
 #include "../headers/resource_manager.h"
 #include "../headers/texture.h"

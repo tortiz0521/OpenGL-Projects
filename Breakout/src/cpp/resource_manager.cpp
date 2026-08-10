@@ -4,8 +4,6 @@
 #include <sstream>
 #include <fstream>
 
-#include "../headers/stb_image.h"
-
 using namespace std;
 
 // Instantiate the static variables:
