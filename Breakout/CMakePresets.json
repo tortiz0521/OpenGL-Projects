@@ -1,13 +1,14 @@
 {
-    "version": 4,
+    "version": 6,
     "configurePresets": [
       {
-        "name": "vcpkg",
-        "generator": "Ninja",
-        "binaryDir": "${sourceDir}/build",
+        "name": "default",
+        "generator": "Visual Studio 17 2022",
         "hidden": false,
         "cacheVariables": {
-          "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+          "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+          "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+          "CMAKE_CXX_STANDARD": "23"
         }
       }
     ]

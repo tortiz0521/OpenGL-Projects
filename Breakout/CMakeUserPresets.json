@@ -1,15 +1,40 @@
 {
-    "version": 4,
+    "version": 6,
     "configurePresets": [
-      {
-        "name": "default",
-        "inherits": "vcpkg",
-        "environment": {
-          "VCPKG_ROOT": "C:/Users/Tim/vcpkg"
+        {
+            "name": "default-debug",
+            "inherits": "default",
+            "binaryDir": "${sourceDir}/build/default-debug",
+            "environment": {
+                "VCPKG_ROOT": "C:/vcpkg"
+            },
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            }
         },
-        "cacheVariables": {
-          "VCPKG_TARGET_TRIPLET": "x64-mingw-static"
+        {
+            "name": "default-release",
+            "inherits": "default",
+            "binaryDir": "${sourceDir}/build/default-release",
+            "environment": {
+                "VCPKG_ROOT": "C:/vcpkg"
+            },
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            }
         }
-      }
+    ],
+
+    "buildPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "default-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "release",
+            "configurePreset": "default-release",
+            "configuration": "Release"
+        }
     ]
-  }
+}

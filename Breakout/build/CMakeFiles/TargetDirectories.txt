@@ -1,3 +1,0 @@
-C:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/build/CMakeFiles/Breakout.dir
-C:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/build/CMakeFiles/edit_cache.dir
-C:/Users/Tim/C++Projects/OpenGL-Projects/Breakout/build/CMakeFiles/rebuild_cache.dir

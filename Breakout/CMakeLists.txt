@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.10)
 
 project(Breakout)
 
+add_executable(Breakout)
+set_target_properties(Breakout PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/bin/Debug"
+    RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_CURRENT_SOURCE_DIR}/bin/Release"
+)
+
 find_package(OpenGL REQUIRED)
 
 find_package(glm CONFIG REQUIRED)
@@ -11,8 +17,6 @@ find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 
 find_package(assimp CONFIG REQUIRED)
-
-add_executable(Breakout)
 
 target_sources(Breakout PRIVATE
     src/cpp/main.cpp
