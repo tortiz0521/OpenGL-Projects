@@ -1,0 +1,40 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "default-debug",
+            "inherits": "default",
+            "binaryDir": "${sourceDir}/build/default-debug",
+            "environment": {
+                "VCPKG_ROOT": "C:/[YOUR VCPKG_PATH]"
+            },
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            }
+        },
+        {
+            "name": "default-release",
+            "inherits": "default",
+            "binaryDir": "${sourceDir}/build/default-release",
+            "environment": {
+                "VCPKG_ROOT": "C:/[YOUR VCPKG_PATH]"
+            },
+            "cacheVariables": {
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            }
+        }
+    ],
+
+    "buildPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "default-debug",
+            "configuration": "Debug"
+        },
+        {
+            "name": "release",
+            "configurePreset": "default-release",
+            "configuration": "Release"
+        }
+    ]
+}

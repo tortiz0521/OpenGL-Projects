@@ -1,4 +1,5 @@
 #include "../headers/game.h"
+#include "../headers/particle.h"
 
 #include <iostream>
 #include <vector>
@@ -11,9 +12,11 @@ const float PLAYER_VELOCITY(500.0f);
 const float BALL_RADIUS = 12.5f;
 const glm::vec2 INITIAL_BALL_VELOCITY(75.0f, -150.0f);
 
+
 SpriteRenderer *Renderer;
 GameObject *Player;
 BallObject *Ball;
+ParticleGenerator *Particles;
 
 /*
     This function acts as a way to check for AABB - AABB collision between two game objects.
@@ -41,9 +44,10 @@ void CollisionAdjust(BallObject &ball, const glm::vec2 &clamp, const glm::vec2 &
     };
     float max = 0.0f;
     unsigned int best_match = -1;
+    glm::vec2 nD = glm::length(D) == 0.0f ? glm::vec2(0.0f, 1.0f) : glm::normalize(D);
     for (unsigned int i = 0; i < 4; i++)
     {
-        float dot_product = glm::dot(glm::normalize(D), compass[i]);
+        float dot_product = glm::dot(nD, compass[i]);
         if (dot_product > max)
         {
             max = dot_product;
@@ -51,7 +55,15 @@ void CollisionAdjust(BallObject &ball, const glm::vec2 &clamp, const glm::vec2 &
         }
     }
 
-    if (glm::dot(glm::normalize(ball.velo), compass[best_match]) <= 0.0f)
+    if (glm::length(ball.velo) == 0.0f)
+        return;
+
+    if (best_match == -1) {
+        std::cout << "ISSUE HERE" << std::endl;
+        return;
+    }
+
+    if (glm::dot(glm::normalize(ball.velo), glm::normalize(compass[best_match])) <= 0.0f)
         return;
 
     glm::vec2 r(0.f), R(0.0f);
@@ -62,7 +74,7 @@ void CollisionAdjust(BallObject &ball, const glm::vec2 &clamp, const glm::vec2 &
 
     // Move the ball to fit.
     ball.position -= R;
-    
+
     // Adjust the velocity of the ball.
     if (best_match == 0 || best_match == 2)
         ball.velo.y = -ball.velo.y;
@@ -114,10 +126,14 @@ void Game::init()
 {
     // Load shaders and textures
     ResourceManager::LoadShader("../../src/shaders/sprite.vs", "../../src/shaders/sprite.fs", nullptr, "sprite");
+    ResourceManager::LoadShader("../../src/shaders/ball_particle.vs", "../../src/shaders/ball_particle.fs", nullptr, "particle");
+
     ResourceManager::LoadTexture("../../textures/awesomeface.png", "awesomeface");
     ResourceManager::LoadTexture("../../textures/block_solid.png", "block_solid");
     ResourceManager::LoadTexture("../../textures/block.png", "block");
     ResourceManager::LoadTexture("../../textures/paddle.png", "paddle");
+    ResourceManager::LoadTexture("../../textures/particle.png", "particle");
+    ResourceManager::LoadTexture("../../textures/background.jpg", "background");
 
     // Create levels and load them.
     GameLevel Standard, AFewSmallGaps, SpaceInvader, BounceGalore;
@@ -148,8 +164,11 @@ void Game::init()
     // Configure shader-vertrex uniforms.
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
+    ResourceManager::GetShader("particle").Use().SetMatrix4("projection", projection);
 
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+
+    Particles = new ParticleGenerator(ResourceManager::GetShader("particle"), ResourceManager::GetTexture("particle"), 5000);
 }
 
 // Looking back on this function makes me cringe a little. Who care about the member variables being private??? It take so much more to do this.
@@ -180,7 +199,10 @@ void Game::ProcessInput(float dt)
 
 void Game::Update(float dt)
 {
-    Ball->Move(dt, this->Width);
+    glm::vec2 startPos = Ball->position;
+    glm::vec2 endPos = Ball->Move(dt, this->Width);
+
+    Particles->Update(dt, *Ball, 1, glm::vec2(Ball->radius / 2.0f), (endPos != startPos));
     this->Collisions();
 }
 
@@ -188,7 +210,7 @@ void Game::Render()
 {
     if (this->State == GAME_ACTIVE) {
         // Draw the background first!
-        Renderer->Draw(ResourceManager::LoadTexture("../../textures/background.jpg", "background"),
+        Renderer->Draw(ResourceManager::GetTexture("background"),
             glm::vec2(0.0f, 0.0f), 0.0f, glm::vec2(this->Width, this->Height));
 
         // Draw the player!
@@ -196,6 +218,9 @@ void Game::Render()
 
         // Draw the rest of the sprites!
         this->levels[this->level].Draw(*Renderer);
+
+        // Draw the particles!
+        Particles->Draw();
 
         // Draw the Ball!
         Ball->Draw(*Renderer);
