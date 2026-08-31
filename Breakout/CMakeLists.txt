@@ -29,6 +29,7 @@ target_sources(Breakout PRIVATE
     src/cpp/game_level.cpp
     src/cpp/ball.cpp
     src/cpp/particle.cpp
+    src/cpp/post_processor.cpp
 )
 
 target_link_libraries(Breakout PRIVATE

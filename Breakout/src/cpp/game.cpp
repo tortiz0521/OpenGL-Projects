@@ -1,5 +1,6 @@
 #include "../headers/game.h"
 #include "../headers/particle.h"
+#include "../headers/post_processor.h"
 
 #include <iostream>
 #include <vector>
@@ -12,11 +13,15 @@ const float PLAYER_VELOCITY(500.0f);
 const float BALL_RADIUS = 12.5f;
 const glm::vec2 INITIAL_BALL_VELOCITY(75.0f, -150.0f);
 
+float shakeTime = 0.0f;
+
 
 SpriteRenderer *Renderer;
 GameObject *Player;
 BallObject *Ball;
 ParticleGenerator *Particles;
+PostProcessor *Post;
+
 
 /*
     This function acts as a way to check for AABB - AABB collision between two game objects.
@@ -127,6 +132,7 @@ void Game::init()
     // Load shaders and textures
     ResourceManager::LoadShader("../../src/shaders/sprite.vs", "../../src/shaders/sprite.fs", nullptr, "sprite");
     ResourceManager::LoadShader("../../src/shaders/ball_particle.vs", "../../src/shaders/ball_particle.fs", nullptr, "particle");
+    ResourceManager::LoadShader("../../src/shaders/post.vs", "../../src/shaders/post.fs", nullptr, "post");
 
     ResourceManager::LoadTexture("../../textures/awesomeface.png", "awesomeface");
     ResourceManager::LoadTexture("../../textures/block_solid.png", "block_solid");
@@ -169,6 +175,9 @@ void Game::init()
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
 
     Particles = new ParticleGenerator(ResourceManager::GetShader("particle"), ResourceManager::GetTexture("particle"), 5000);
+
+    Post = new PostProcessor();
+    Post->init(ResourceManager::GetShader("post"), 800, 600);
 }
 
 // Looking back on this function makes me cringe a little. Who care about the member variables being private??? It take so much more to do this.
@@ -204,11 +213,19 @@ void Game::Update(float dt)
 
     Particles->Update(dt, *Ball, 1, glm::vec2(Ball->radius / 2.0f), (endPos != startPos));
     this->Collisions();
+    if (shakeTime > 0.0f) {
+        shakeTime -= dt;
+        if (shakeTime <= 0.0f) {
+            Post->m_shake = false;
+        }
+    }
 }
 
 void Game::Render()
 {
     if (this->State == GAME_ACTIVE) {
+        Post->BindPostprocess();
+
         // Draw the background first!
         Renderer->Draw(ResourceManager::GetTexture("background"),
             glm::vec2(0.0f, 0.0f), 0.0f, glm::vec2(this->Width, this->Height));
@@ -224,6 +241,9 @@ void Game::Render()
 
         // Draw the Ball!
         Ball->Draw(*Renderer);
+
+        Post->EndPostprocess();
+        Post->PostprocessRender(glfwGetTime());
     }
 }
 
@@ -248,6 +268,10 @@ void Game::Collisions()
         if (b.IsAlive() && CheckCircleCollision(b, *Ball)) {
             if (!b.IsSolid())
                 b.Destroy();
+            else {
+                shakeTime = 0.05f;
+                Post->m_shake = true;
+            }
         }
     }
 }

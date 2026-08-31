@@ -9,12 +9,12 @@ ParticleGenerator::ParticleGenerator(Shader shader, Texture2D texture, unsigned 
 
 void ParticleGenerator::Update(float dt, GameObject &object, unsigned int newParticles, glm::vec2 offset, bool createNew)
 {
-    //if (createNew) {
+    if (createNew) {
         for (unsigned int i = 0; i < newParticles; ++i) {
             int index = m_FirstUnusedParticle();
             m_RespawnParticle(m_particles[index], object, offset);
         }
-    //}
+    }
 
     for (unsigned int i = 0; i < m_amount; ++i) {
         Particle &p = m_particles[i];
@@ -43,8 +43,6 @@ void ParticleGenerator::Draw()
         }
     }
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    std::cout << counter << " particles drawn." << std::endl;
 }
 
 
