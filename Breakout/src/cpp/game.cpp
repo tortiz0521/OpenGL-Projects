@@ -28,13 +28,13 @@ PostProcessor *Post;
     It checks if the ball objects furthest axes are greater than the bricks position axis and
     vice-versa. If both are true, then we know that there is some collision across the axis.
 */
-bool CheckBoxCollision(GameObject &brick, GameObject &ball)
+bool CheckBoxCollision(GameObject &first, GameObject &second)
 {
-    bool xCollision = ball.position.x + ball.size.x >= brick.position.x &&
-        ball.position.x <= brick.position.x + brick.size.x;
+    bool xCollision = second.position.x + second.size.x >= first.position.x &&
+        second.position.x <= first.position.x + first.size.x;
     
-    bool yCollision = ball.position.y + ball.size.y >= brick.position.y &&
-        ball.position.y <= brick.position.y + brick.size.y;
+    bool yCollision = second.position.y + second.size.y >= first.position.y &&
+        second.position.y <= first.position.y + first.size.y;
     
     return xCollision && yCollision;
 }
@@ -140,6 +140,13 @@ void Game::init()
     ResourceManager::LoadTexture("../../textures/paddle.png", "paddle");
     ResourceManager::LoadTexture("../../textures/particle.png", "particle");
     ResourceManager::LoadTexture("../../textures/background.jpg", "background");
+    // Powerups
+    ResourceManager::LoadTexture("../../textures/powerup_speed.png", "powerup_speed");
+    ResourceManager::LoadTexture("../../textures/powerup_sticky.png", "powerup_sticky");
+    ResourceManager::LoadTexture("../../textures/powerup_increase.png", "powerup_increase");
+    ResourceManager::LoadTexture("../../textures/powerup_confuse.png", "powerup_confuse");
+    ResourceManager::LoadTexture("../../textures/powerup_chaos.png", "powerup_chaos");
+    ResourceManager::LoadTexture("../../textures/powerup_passthrough.png", "powerup_passthrough");
 
     // Create levels and load them.
     GameLevel Standard, AFewSmallGaps, SpaceInvader, BounceGalore;
@@ -212,12 +219,84 @@ void Game::Update(float dt)
     glm::vec2 endPos = Ball->Move(dt, this->Width);
 
     Particles->Update(dt, *Ball, 1, glm::vec2(Ball->radius / 2.0f), (endPos != startPos));
+    this->UpdatePowerUps(dt);
+
     this->Collisions();
     if (shakeTime > 0.0f) {
         shakeTime -= dt;
         if (shakeTime <= 0.0f) {
             Post->m_shake = false;
         }
+    }
+}
+
+
+bool SpawnChance(unsigned int chance)
+{
+    unsigned int random = rand() % chance;
+    return random == 0;
+}
+
+void Game::SpawnPowerUps(GameObject &block)
+{
+    if (SpawnChance(75)) {
+        PowerUps.push_back(PowerUp("speed", block.position, ResourceManager::GetTexture("powerup_speed"), 0.0f, glm::vec3(1.0f, 1.0f, 0.0f)));
+    }
+    if (SpawnChance(75)) {
+        PowerUps.push_back(PowerUp("sticky", block.position, ResourceManager::GetTexture("powerup_sticky"), 20.0f, glm::vec3(0.0f, 0.0f, 1.0f)));
+    }
+    if (SpawnChance(75)) {
+        PowerUps.push_back(PowerUp("pass-through", block.position, ResourceManager::GetTexture("powerup_passthrough"), 10.0f, glm::vec3(1.0f, 0.0f, 1.0f)));
+    }
+    if (SpawnChance(75)) {
+        PowerUps.push_back(PowerUp("pad-size-increase", block.position, ResourceManager::GetTexture("powerup_increase"), 10.0f, glm::vec3(0.0f, 1.0f, 0.0f)));
+    }
+    if (SpawnChance(15)) {
+        PowerUps.push_back(PowerUp("confuse", block.position, ResourceManager::GetTexture("powerup_confuse"), 5.0f, glm::vec3(1.0f, 0.0f, 0.0f)));
+    }
+    if (SpawnChance(15)) {
+        PowerUps.push_back(PowerUp("chaos", block.position, ResourceManager::GetTexture("powerup_chaos"), 5.0f, glm::vec3(1.0f, 0.0f, 0.0f)));
+    }
+}
+
+void Game::UpdatePowerUps(float dt)
+{
+    for (PowerUp &p : this->PowerUps) {
+        p.position += p.velo * dt;
+
+        if (p.m_activated) {
+            p.m_duration -= dt;
+            
+            if (p.m_duration > 0.0f) continue;
+
+            if (p.m_type == "sticky") {
+                if (!isOtherPowerActive(p)) {
+                    Ball->isSticky = true;
+                }
+            }
+            else if (p.m_type == "pass-through") {
+                if (!isOtherPowerActive(p)) {
+                    Ball->isSolid = true;
+                    Ball->color = glm::vec3(1.0f);
+                }
+            }
+            else if (p.m_type == "pad-size-increase") {
+                if (!isOtherPowerActive(p)) {
+                    Player->size.x -= 50.0f;
+                }
+            }
+            else if (p.m_type == "confuse") {
+                if (!isOtherPowerActive(p)) {
+                    Post->m_confuse = false;
+                }
+            }
+            else if (p.m_type == "chaos") {
+                if (!isOtherPowerActive(p)) {
+                    Post->m_chaos = false;
+                }
+            }
+        }
+
     }
 }
 
@@ -236,6 +315,10 @@ void Game::Render()
         // Draw the rest of the sprites!
         this->levels[this->level].Draw(*Renderer);
 
+        for (PowerUp &p : this->PowerUps) {
+            p.Draw(*Renderer);
+        }
+
         // Draw the particles!
         Particles->Draw();
 
@@ -244,6 +327,32 @@ void Game::Render()
 
         Post->EndPostprocess();
         Post->PostprocessRender(glfwGetTime());
+    }
+}
+
+void ActivatePowerUp(PowerUp &powerup)
+{
+    powerup.m_activated = true;
+    if (powerup.m_type == "speed") {
+        Ball->velo *= 1.2f;
+    }
+    else if (powerup.m_type == "sticky") {
+        Ball->isSticky = true;
+    }
+    else if (powerup.m_type == "pass-through") {
+        Ball->isSolid = false;
+        Ball->color = glm::vec3(1.0f, 0.5f, 0.5f);
+    }
+    else if (powerup.m_type == "pad-size-increase") {
+        Player->size.x += 50.0f;
+    }
+    else if (powerup.m_type == "confuse") {
+        if (!Post->m_chaos) 
+            Post->m_confuse = true;
+    }
+    else if (powerup.m_type == "chaos") {
+        if (!Post->m_confuse) 
+            Post->m_chaos = true;
     }
 }
 
@@ -264,14 +373,36 @@ void Game::Collisions()
         return;
     }
 
+    for (PowerUp &p : this->PowerUps) {
+        if (p.IsAlive() && CheckBoxCollision(*Player, p)) {
+            ActivatePowerUp(p);
+            p.Destroy();
+        }
+        else if (p.IsAlive() && p.position.y >= this->Height) {
+            p.Destroy();
+        }
+    }
+
     for (GameObject &b : this->levels[level].Bricks) {
         if (b.IsAlive() && CheckCircleCollision(b, *Ball)) {
-            if (!b.IsSolid())
+            if (!b.IsSolid()) {
+                this->SpawnPowerUps(b);
                 b.Destroy();
+            }
             else {
                 shakeTime = 0.05f;
                 Post->m_shake = true;
             }
         }
     }
+}
+
+bool Game::isOtherPowerActive(PowerUp& powerup)
+{
+    for (PowerUp &p : this->PowerUps) {
+        if (p.IsAlive() && p.m_activated && p.m_type == powerup.m_type && &p != &powerup) {
+            return true;
+        }
+    }
+    return false;
 }

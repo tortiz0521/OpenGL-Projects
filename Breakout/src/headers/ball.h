@@ -9,6 +9,8 @@ public:
     // The ball state vars
     float radius;
     bool stuck = true;
+    bool isSolid = true;
+    bool isSticky = false;
 
     BallObject();
     BallObject(glm::vec2 pos, float radius, glm::vec2 velocity, Texture2D sprite);

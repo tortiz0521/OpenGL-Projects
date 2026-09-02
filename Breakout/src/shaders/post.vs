@@ -15,7 +15,7 @@ void main()
 
     if (chaos) {
         float strengh = 0.3;
-        vec2 pos = vec2(texture.x + sin(time) * strengh, texture.y + cos(time) * strengh);
+        vec2 pos = vec2(texture.x + (sin(time) * strengh), texture.y + (cos(time) * strengh));
         coords = pos;
     }
     else if (confuse) {
@@ -26,7 +26,7 @@ void main()
     }
 
     if (shake) {
-        float strength = 0.1;
+        float strength = 0.01;
         gl_Position.x += cos(time * 10) * strength;
         gl_Position.y += cos(time * 15) * strength;
     }
